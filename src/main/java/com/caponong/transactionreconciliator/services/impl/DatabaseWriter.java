@@ -9,6 +9,7 @@ import com.caponong.transactionreconciliator.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +31,7 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
 
     @Transactional
     @Override
+    @Async("threadPoolTaskExecutor")
     public void write(MultipartCsvFile data) {
 
         try (InputStream inputStream = data.getMultipartFile().getInputStream();
