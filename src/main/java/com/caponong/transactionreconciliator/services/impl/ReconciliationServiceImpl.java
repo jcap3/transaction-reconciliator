@@ -35,9 +35,9 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                                                         MultipartFile secondTransactionSet) {
 
         String generatedReconciliationToken = String.valueOf(randomUUID());
+        reconciliationRequestHandlerService.addRequestToken(generatedReconciliationToken);
         databaseWriter.write(new MultipartCsvFile(firstTransactionSet, FIRST_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
         databaseWriter.write(new MultipartCsvFile(secondTransactionSet, SECOND_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
-        reconciliationRequestHandlerService.addRequestToken(generatedReconciliationToken);
         
         return TransactionsUploadResponse.builder()
                 .reconciliationToken(generatedReconciliationToken)

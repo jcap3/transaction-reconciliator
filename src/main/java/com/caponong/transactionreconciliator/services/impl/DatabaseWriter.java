@@ -2,7 +2,9 @@ package com.caponong.transactionreconciliator.services.impl;
 
 import com.caponong.transactionreconciliator.configuration.properties.CsvTransactionIndexFormatConfigProperties;
 import com.caponong.transactionreconciliator.entity.Transaction;
+import com.caponong.transactionreconciliator.error.exception.DatabaseError;
 import com.caponong.transactionreconciliator.model.MultipartCsvFile;
+import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.TransactionsDbService;
 import com.caponong.transactionreconciliator.services.Writer;
 import com.caponong.transactionreconciliator.util.DateUtil;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,9 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
 
     @Autowired
     private CsvTransactionIndexFormatConfigProperties fieldIndex;
+    
+    @Autowired
+    private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 
     @Override
     @Async("threadPoolTaskExecutor")
@@ -45,7 +49,9 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
             }
         } catch (IOException e) {
             log.error("Service error", e);
+            throw new DatabaseError(e);
         }
+        reconciliationRequestHandlerService.activateForProcessing(extractTokenFromIdentifier(data.getIdentifier()));
     }
 
     private Transaction buildTransaction(String oneLinedFields, MultipartCsvFile data) {
@@ -65,6 +71,10 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
 
     private String getField(String[] separatedFields, int index) {
         return index > separatedFields.length - 1 ? StringUtils.EMPTY : separatedFields[index];
+    }
+    
+    private String extractTokenFromIdentifier (String identifier) {
+        return StringUtils.substring(identifier, 2);
     }
 
 }
