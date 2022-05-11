@@ -1,5 +1,6 @@
 package com.caponong.transactionreconciliator.controller;
 
+import com.caponong.transactionreconciliator.model.MatchTransactionsCountResponse;
 import com.caponong.transactionreconciliator.model.Response;
 import com.caponong.transactionreconciliator.model.TransactionsUploadResponse;
 import com.caponong.transactionreconciliator.services.ReconciliationService;
@@ -10,21 +11,28 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/transaction")
+@RequestMapping("/api/transactions")
 public class TransactionsApiController implements TransactionsApi {
 
     @Autowired
     private ReconciliationService reconciliationService;    
     
     @Override
-    @PostMapping()
+    @PostMapping("/upload")
     public ResponseEntity<Response<TransactionsUploadResponse>> uploadTransaction(
             @RequestPart("firstTransactionSet") MultipartFile firstTransactionSet,
             @RequestPart("secondTransactionSet") MultipartFile secondTransactionSet) {
 
         return ResponseConverter.convert(reconciliationService.uploadTransaction(firstTransactionSet,secondTransactionSet));
     }
-    
+
+    @Override
+    @GetMapping("/{reconciliationToken}/matchResult")
+    public ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
+            @PathVariable(name = "reconciliationToken") String reconciliationToken) {
+        return ResponseConverter.convert(reconciliationService.getMatchCount(reconciliationToken));
+    }
+
     @GetMapping("/temp")
     public String tempGet() {
         return "Hello";

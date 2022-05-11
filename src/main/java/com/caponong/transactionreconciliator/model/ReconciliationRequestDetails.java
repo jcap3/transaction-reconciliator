@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class ReconciliationRequestStatus {
+public class ReconciliationRequestDetails {
 
+    private String fileName1;
+    
+    private String fileName2; 
+    
     private LocalDateTime creationDate;
     
     private boolean isReadyForProcessing;

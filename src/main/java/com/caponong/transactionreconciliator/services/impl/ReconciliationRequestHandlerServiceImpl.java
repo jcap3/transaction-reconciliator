@@ -1,6 +1,6 @@
 package com.caponong.transactionreconciliator.services.impl;
 
-import com.caponong.transactionreconciliator.model.ReconciliationRequestStatus;
+import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.TransactionsDbService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +24,15 @@ public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRe
     @Value("#{${reconciliaton-token-expiry}}")
     private int tokenExpiry;
 
-    private final Map<String, ReconciliationRequestStatus> reconciliationTokensMap = new ConcurrentHashMap<>();
+    private final Map<String, ReconciliationRequestDetails> reconciliationTokensMap = new ConcurrentHashMap<>();
 
     @Override
-    public synchronized void addRequestToken(String token) {
+    public synchronized void addRequestToken(String token, String fileName1, String fileName2) {
         reconciliationTokensMap.put(token,
-                ReconciliationRequestStatus.builder()
+                ReconciliationRequestDetails.builder()
                         .isReadyForProcessing(Boolean.FALSE)
+                        .fileName1(fileName1)
+                        .fileName2(fileName2)
                         .creationDate(LocalDateTime.now())
                         .build());
     }
@@ -49,6 +51,17 @@ public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRe
     public void activateForProcessing(String token) {
         log.info("Token: {} - Ready for processing", token);
         reconciliationTokensMap.get(token).setReadyForProcessing(Boolean.TRUE);
+    }
+
+    @Override
+    public ReconciliationRequestDetails getDetails(String token) {
+        ReconciliationRequestDetails source = reconciliationTokensMap.get(token);
+        return ReconciliationRequestDetails.builder()
+                .fileName1(source.getFileName1())
+                .fileName2(source.getFileName2())
+                .creationDate(source.getCreationDate())
+                .isReadyForProcessing(source.isReadyForProcessing())
+                .build();
     }
 
     private List<String> getExpiredTokens() {
