@@ -3,7 +3,7 @@ package com.caponong.transactionreconciliator.services.impl;
 import com.caponong.transactionreconciliator.configuration.properties.CsvTransactionIndexFormatConfigProperties;
 import com.caponong.transactionreconciliator.entity.Transaction;
 import com.caponong.transactionreconciliator.model.MultipartCsvFile;
-import com.caponong.transactionreconciliator.repository.TransactionRepository;
+import com.caponong.transactionreconciliator.services.TransactionsDbService;
 import com.caponong.transactionreconciliator.services.Writer;
 import com.caponong.transactionreconciliator.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +24,11 @@ import java.math.BigDecimal;
 public class DatabaseWriter implements Writer<MultipartCsvFile> {
 
     @Autowired
-    private TransactionRepository repository;
+    private TransactionsDbService transactionsDbService;
 
     @Autowired
     private CsvTransactionIndexFormatConfigProperties fieldIndex;
 
-    @Transactional
     @Override
     @Async("threadPoolTaskExecutor")
     public void write(MultipartCsvFile data) {
@@ -41,8 +40,8 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
                 if (a == 0) {
                     continue;
                 }
-                repository.save(buildTransaction(line, data));
-                log.info(String.valueOf(a));
+                transactionsDbService.save(buildTransaction(line, data));
+                log.debug(String.valueOf(a));
             }
         } catch (IOException e) {
             log.error("Service error", e);
@@ -65,7 +64,7 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
     }
 
     private String getField(String[] separatedFields, int index) {
-        return index > separatedFields.length - 1? StringUtils.EMPTY : separatedFields[index];
+        return index > separatedFields.length - 1 ? StringUtils.EMPTY : separatedFields[index];
     }
 
 }

@@ -13,12 +13,17 @@ public class AsyncConfig {
     
     @Bean(name = "threadPoolTaskExecutor")
     public Executor threadPoolTaskExecutor() {
-        return createExecutor();
+        return createExecutor(2);
     }
     
-    private ThreadPoolTaskExecutor createExecutor () {
+    @Bean (name = "expiredTokensExecutor")
+    public Executor expiredTokensExecutor() {
+        return createExecutor(2);
+    }
+    
+    private ThreadPoolTaskExecutor createExecutor (Integer poolSize) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setCorePoolSize(2);
+        threadPoolTaskExecutor.setCorePoolSize(poolSize);
         return threadPoolTaskExecutor;
     }
 }

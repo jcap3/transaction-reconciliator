@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, TransactionKey> {
 
+    
+    void deleteByReconciliationTokenContaining(String token);
+    
 }

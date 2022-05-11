@@ -2,6 +2,7 @@ package com.caponong.transactionreconciliator.services.impl;
 
 import com.caponong.transactionreconciliator.model.MultipartCsvFile;
 import com.caponong.transactionreconciliator.model.TransactionsUploadResponse;
+import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.ReconciliationService;
 import com.caponong.transactionreconciliator.services.Writer;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,9 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
     @Autowired
     private Writer<MultipartCsvFile> databaseWriter;
+    
+    @Autowired
+    private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 
     private static final String FIRST_TRANSACTION_IDENTIFIER = "a_";
 
@@ -30,12 +34,13 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     public TransactionsUploadResponse uploadTransaction(MultipartFile firstTransactionSet,
                                                         MultipartFile secondTransactionSet) {
 
-        String baseIdentifier = String.valueOf(randomUUID());
-        databaseWriter.write(new MultipartCsvFile(firstTransactionSet, FIRST_TRANSACTION_IDENTIFIER + baseIdentifier));
-        databaseWriter.write(new MultipartCsvFile(secondTransactionSet, SECOND_TRANSACTION_IDENTIFIER + baseIdentifier));
-
+        String generatedReconciliationToken = String.valueOf(randomUUID());
+        databaseWriter.write(new MultipartCsvFile(firstTransactionSet, FIRST_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
+        databaseWriter.write(new MultipartCsvFile(secondTransactionSet, SECOND_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
+        reconciliationRequestHandlerService.addRequestToken(generatedReconciliationToken);
+        
         return TransactionsUploadResponse.builder()
-                .reconciliationToken(baseIdentifier)
+                .reconciliationToken(generatedReconciliationToken)
                 .tokenExpiry(tokenExpiry)
                 .build();
     }
