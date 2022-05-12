@@ -8,6 +8,7 @@ import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.model.TransactionsUploadResponse;
 import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.ReconciliationService;
+import com.caponong.transactionreconciliator.services.TransactionsReader;
 import com.caponong.transactionreconciliator.services.Writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
     
     @Autowired
-    private TransactionReconciliator transactionReconciliator;
+    private TransactionsReader transactionReconciliator;
 
     @Value("#{${reconciliaton-token-expiry}}")
     private int tokenExpiry;
@@ -68,8 +69,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                     reconciliationToken);
 
             return MatchTransactionsCountResponse.builder()
-                    .file1(waitForFutureResult(file1))
-                    .file2(waitForFutureResult(file2))
+                    .firstTransactionSet(waitForFutureResult(file1))
+                    .secondTransactionSet(waitForFutureResult(file2))
                     .build();
         } catch (InterruptedException | ExecutionException e) {
             log.error("Service error", e);

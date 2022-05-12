@@ -7,9 +7,9 @@ import lombok.Data;
 @Builder
 public class MatchTransactionsCountResponse {
 
-    private FileMatchResult file1;
+    private FileMatchResult firstTransactionSet;
     
-    private FileMatchResult file2;
+    private FileMatchResult secondTransactionSet;
     
     @Data
     @Builder

@@ -13,7 +13,7 @@ public class RetireExpiredTokenScheduledTask {
     ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 
     @Async("expiredTokensExecutor")
-    @Scheduled(fixedRate = 60000L)
+    @Scheduled(fixedRateString = "${expired-reconciliaton-token-check-interval}")
     public void run() {
         reconciliationRequestHandlerService.retireExpiredTokens();
     }
