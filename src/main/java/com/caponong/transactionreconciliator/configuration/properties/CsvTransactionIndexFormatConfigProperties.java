@@ -15,19 +15,19 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("csv.transaction.index")
 public class CsvTransactionIndexFormatConfigProperties {
 
-    private Integer profileName;
+    private int profileName;
     
-    private Integer transactionDate;
+    private int transactionDate;
     
-    private Integer transactionAmount;
+    private int transactionAmount;
     
-    private Integer transactionNarrative;
+    private int transactionNarrative;
     
-    private Integer transactionDescription;
+    private int transactionDescription;
     
-    private Integer transactionId;
+    private int transactionId;
     
-    private Integer transactionType;
+    private int transactionType;
     
-    private Integer walletReference;
+    private int walletReference;
 }

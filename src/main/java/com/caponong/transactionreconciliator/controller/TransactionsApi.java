@@ -3,6 +3,7 @@ package com.caponong.transactionreconciliator.controller;
 import com.caponong.transactionreconciliator.model.MatchTransactionsCountResponse;
 import com.caponong.transactionreconciliator.model.Response;
 import com.caponong.transactionreconciliator.model.TransactionsUploadResponse;
+import com.caponong.transactionreconciliator.model.UnmatchedTransactionsResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,5 +35,15 @@ public interface TransactionsApi {
             @ApiResponse(code = 400, message = "Bad Request", response = Response.class),
             @ApiResponse(code = 401, message = "Unauthorized", response = Response.class)})
     ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
+            @PathVariable(name = "reconciliationToken") String reconciliationToken);
+
+    @ApiOperation(value = "unmatchedTransactions",
+            notes = "Invoking this endpoint allows client to get the unmatched transactions and its possible matches",
+            response = UnmatchedTransactionsResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = UnmatchedTransactionsResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = Response.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Response.class)})
+    ResponseEntity<Response<UnmatchedTransactionsResponse>> unmatchedTransactions(
             @PathVariable(name = "reconciliationToken") String reconciliationToken);
 }

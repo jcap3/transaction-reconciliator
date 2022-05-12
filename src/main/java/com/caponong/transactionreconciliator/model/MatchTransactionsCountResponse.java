@@ -17,10 +17,10 @@ public class MatchTransactionsCountResponse {
         
         private String fileName;
         
-        private Integer totalUniqueRecords;
+        private int totalUniqueRecords;
         
-        private Integer matchedTransactions;
+        private int matchedTransactions;
 
-        private Integer unmatchedTransactions;    
+        private int unmatchedTransactions;    
     }
 }

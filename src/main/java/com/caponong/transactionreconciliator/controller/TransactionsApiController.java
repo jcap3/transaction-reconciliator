@@ -3,6 +3,7 @@ package com.caponong.transactionreconciliator.controller;
 import com.caponong.transactionreconciliator.model.MatchTransactionsCountResponse;
 import com.caponong.transactionreconciliator.model.Response;
 import com.caponong.transactionreconciliator.model.TransactionsUploadResponse;
+import com.caponong.transactionreconciliator.model.UnmatchedTransactionsResponse;
 import com.caponong.transactionreconciliator.services.ReconciliationService;
 import com.caponong.transactionreconciliator.util.ResponseConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,13 @@ public class TransactionsApiController implements TransactionsApi {
     public ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
             @PathVariable(name = "reconciliationToken") String reconciliationToken) {
         return ResponseConverter.convert(reconciliationService.getMatchSummary(reconciliationToken));
+    }
+
+    @Override
+    @GetMapping("/{reconciliationToken}/unmatchedTransactionsSummary")
+    public ResponseEntity<Response<UnmatchedTransactionsResponse>> unmatchedTransactions(
+            @PathVariable(name = "reconciliationToken") String reconciliationToken) {
+        return ResponseConverter.convert(reconciliationService.getUnmatchedTransactions(reconciliationToken));
     }
 
     @GetMapping("/temp")

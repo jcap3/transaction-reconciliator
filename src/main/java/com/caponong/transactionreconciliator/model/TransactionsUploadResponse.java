@@ -9,5 +9,5 @@ public class TransactionsUploadResponse {
     
     private String reconciliationToken;
     
-    private Integer tokenExpiry;
+    private int tokenExpiry;
 }

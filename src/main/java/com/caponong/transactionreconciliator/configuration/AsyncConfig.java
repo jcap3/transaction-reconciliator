@@ -21,7 +21,7 @@ public class AsyncConfig {
         return createExecutor(2);
     }
     
-    private ThreadPoolTaskExecutor createExecutor (Integer poolSize) {
+    private ThreadPoolTaskExecutor createExecutor (int poolSize) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(poolSize);
         return threadPoolTaskExecutor;
