@@ -27,10 +27,10 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     @Override
-    @GetMapping("/{reconciliationToken}/matchResult")
+    @GetMapping("/{reconciliationToken}/matchSummary")
     public ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
             @PathVariable(name = "reconciliationToken") String reconciliationToken) {
-        return ResponseConverter.convert(reconciliationService.getMatchCount(reconciliationToken));
+        return ResponseConverter.convert(reconciliationService.getMatchSummary(reconciliationToken));
     }
 
     @GetMapping("/temp")

@@ -29,7 +29,6 @@ public class TransactionMySqlService implements TransactionsDbService {
         repository.deleteByReconciliationTokenContaining(token);
     }
 
-    @Transactional
     @Override
     public Integer getMatchCount(String identifierFile1, String identifierFile2, String token) {
         String likeExpressionFile1 = StringUtils.join(new String[]{identifierFile1, token, "%"});

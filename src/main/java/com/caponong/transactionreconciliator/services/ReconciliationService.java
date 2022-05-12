@@ -8,5 +8,5 @@ public interface ReconciliationService {
 
     TransactionsUploadResponse uploadTransaction(MultipartFile firstTransactionSet, MultipartFile secondTransactionSet);
 
-    MatchTransactionsCountResponse getMatchCount(String reconciliationToken);
+    MatchTransactionsCountResponse getMatchSummary(String reconciliationToken);
 }
