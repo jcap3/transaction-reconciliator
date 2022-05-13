@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TransactionMatchSuccessIT extends ApplicationTest {
 
     @Test
-    public void successMatchTest() throws Exception {
+    public void testSuccessMatch() throws Exception {
 
         String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvOneMatch_FirstFile.csv",
                 "testDataCsvOneMatch_SecondFile.csv");
@@ -42,8 +42,8 @@ public class TransactionMatchSuccessIT extends ApplicationTest {
                 .andDo(print());
     }
     
-    @Test
-    public void successMatchChunkedDataTest() throws Exception {
+    @Test // todo
+    public void testSuccessMatchChunkedData() throws Exception {
         String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvOneMatch_FirstFile.csv",
                 "testDataCsvOneMatch_SecondFile.csv");
     }

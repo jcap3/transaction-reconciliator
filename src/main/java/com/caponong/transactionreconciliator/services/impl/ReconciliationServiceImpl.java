@@ -13,7 +13,6 @@ import com.caponong.transactionreconciliator.services.TransactionsReader;
 import com.caponong.transactionreconciliator.services.Writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +32,6 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     @Autowired
     private Writer<MultipartCsvFile> databaseWriter;
 
-    @Qualifier("reconciliationRequestHandlerServiceImpl")
     @Autowired
     private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 

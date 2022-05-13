@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TransactionUploadSuccessIT extends ApplicationTest {
 
     @Test
-    public void uploadSuccessTest() throws Exception {
+    public void testUploadSuccess() throws Exception {
         mockMvc.perform(
                 multipart(TRANSACTION_UPLOAD_API)
                         .file(getTestDataCsv("firstTransactionSet", "testDataCsvOne.csv"))

@@ -3,7 +3,6 @@ package com.caponong.transactionreconciliator.services.impl;
 import com.caponong.transactionreconciliator.configuration.properties.CsvTransactionIndexFormatConfigProperties;
 import com.caponong.transactionreconciliator.entity.Transaction;
 import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
-import com.caponong.transactionreconciliator.error.exception.DatabaseError;
 import com.caponong.transactionreconciliator.error.exception.InternalServerError;
 import com.caponong.transactionreconciliator.model.MultipartCsvFile;
 import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
@@ -13,7 +12,6 @@ import com.caponong.transactionreconciliator.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +31,6 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
     @Autowired
     private CsvTransactionIndexFormatConfigProperties fieldIndex;
     
-    @Qualifier("reconciliationRequestHandlerServiceImpl")
     @Autowired
     private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 

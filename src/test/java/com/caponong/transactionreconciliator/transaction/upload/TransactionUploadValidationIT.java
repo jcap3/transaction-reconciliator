@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TransactionUploadValidationIT extends ApplicationTest {
 
     @Test
-    public void missingRequestPartTest() throws Exception {
+    public void testMissingRequestPart() throws Exception {
         mockMvc.perform(
                 multipart(TRANSACTION_UPLOAD_API)
                         .file(getTestDataCsv("firstTransactionSets", "testDataCsvOne.csv"))
@@ -37,7 +37,7 @@ public class TransactionUploadValidationIT extends ApplicationTest {
     }
 
     @Test
-    public void invalidFileUploadedTest() throws Exception {
+    public void testInvalidFileUploaded() throws Exception {
         mockMvc.perform(
                 multipart(TRANSACTION_UPLOAD_API)
                         .file(getTestDataCsv("firstTransactionSet", "testDataCsvOne.csv"))
