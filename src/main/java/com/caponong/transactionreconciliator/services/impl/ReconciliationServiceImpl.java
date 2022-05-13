@@ -1,6 +1,9 @@
 package com.caponong.transactionreconciliator.services.impl;
 
+import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.InternalServerError;
+import com.caponong.transactionreconciliator.error.exception.RequestInterruptedError;
+import com.caponong.transactionreconciliator.error.exception.RequestNotReadyError;
 import com.caponong.transactionreconciliator.model.*;
 import com.caponong.transactionreconciliator.model.MatchTransactionsCountResponse.FileMatchResult;
 import com.caponong.transactionreconciliator.model.UnmatchedTransactionsResponse.UnmatchedTransactionsWrapper;
@@ -10,6 +13,7 @@ import com.caponong.transactionreconciliator.services.TransactionsReader;
 import com.caponong.transactionreconciliator.services.Writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     @Autowired
     private Writer<MultipartCsvFile> databaseWriter;
 
+    @Qualifier("reconciliationRequestHandlerServiceImpl")
     @Autowired
     private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
 
@@ -58,7 +63,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     @Override
     public MatchTransactionsCountResponse getMatchSummary(String reconciliationToken) {
         ReconciliationRequestDetails reconciliationRequestDetails = reconciliationRequestHandlerService.getDetails(reconciliationToken);
-
+        verifyRequestStatus(reconciliationRequestDetails.getStatus());
+        
         try {
             Future<FileMatchResult> file1 = transactionReconciliator.getFileMatchResult(reconciliationRequestDetails.getFileName1(),
                     FIRST_TRANSACTION_IDENTIFIER,
@@ -112,5 +118,13 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 return futureTask.get();
             }
         }
+    }
+    
+    private void verifyRequestStatus(ReconciliationRequestStatus status) {
+        if (status == ReconciliationRequestStatus.NOT_READY)
+            throw new RequestNotReadyError("Requested token not yet ready");
+        else if (status == ReconciliationRequestStatus.ERROR)
+            throw new RequestInterruptedError("Request token encountered an error");
+            
     }
 }

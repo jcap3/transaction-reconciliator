@@ -1,5 +1,6 @@
 package com.caponong.transactionreconciliator.model;
 
+import com.caponong.transactionreconciliator.error.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -12,4 +13,6 @@ public class Response<T> {
     private String code;
 
     private T body;
+    
+    private ErrorCode errorCode;
 }

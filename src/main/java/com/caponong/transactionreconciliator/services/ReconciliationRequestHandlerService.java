@@ -1,5 +1,6 @@
 package com.caponong.transactionreconciliator.services;
 
+import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 
 public interface ReconciliationRequestHandlerService {
@@ -8,7 +9,7 @@ public interface ReconciliationRequestHandlerService {
     
     void retireExpiredTokens();
     
-    void activateForProcessing(String token);
+    void updateStatus(String token, ReconciliationRequestStatus status);
 
     ReconciliationRequestDetails getDetails(String token);
     

@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.caponong.transactionreconciliator.constant.TransactionsConstant.FIRST_TRANSACTION_IDENTIFIER;
 import static com.caponong.transactionreconciliator.constant.TransactionsConstant.SECOND_TRANSACTION_IDENTIFIER;
+import static com.caponong.transactionreconciliator.util.ReconciliationTokenUtil.createLikeExpression;
 
 @Service
 @Slf4j
@@ -67,9 +68,6 @@ public class TransactionMySqlService implements TransactionsDbService {
     public List<Transaction> getTransactionsByToken(String token, Pageable page) {
         return repository.findByReconciliationTokenContaining(token, page);
     }
-
-    private String createLikeExpression(String token, String identifier) {
-        return StringUtils.join(new String[]{identifier, token, "%"});
-    }
+    
 
 }

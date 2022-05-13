@@ -17,4 +17,8 @@ public class ReconciliationTokenUtil {
         else
             return reconciliationToken.replaceFirst("^" + SECOND_TRANSACTION_IDENTIFIER, FIRST_TRANSACTION_IDENTIFIER);
     }
+
+    public static String createLikeExpression(String token, String identifier) {
+        return StringUtils.join(new String[]{identifier, token, "%"});
+    }
 }

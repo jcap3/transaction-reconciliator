@@ -1,5 +1,7 @@
 package com.caponong.transactionreconciliator.services.impl;
 
+import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
+import com.caponong.transactionreconciliator.error.exception.RequestTokenNotFound;
 import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.TransactionsDbService;
@@ -30,7 +32,7 @@ public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRe
     public synchronized void addRequestToken(String token, String fileName1, String fileName2) {
         reconciliationTokensMap.put(token,
                 ReconciliationRequestDetails.builder()
-                        .isReadyForProcessing(Boolean.FALSE)
+                        .status(ReconciliationRequestStatus.NOT_READY)
                         .fileName1(fileName1)
                         .fileName2(fileName2)
                         .creationDate(LocalDateTime.now())
@@ -48,19 +50,21 @@ public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRe
     }
 
     @Override
-    public void activateForProcessing(String token) {
-        log.info("Token: {} - Ready for processing", token);
-        reconciliationTokensMap.get(token).setReadyForProcessing(Boolean.TRUE);
+    public void updateStatus(String token, ReconciliationRequestStatus status) {
+        log.info("Token: {} - Changed status to {}", token, status);
+        reconciliationTokensMap.get(token).setStatus(status);
     }
 
     @Override
-    public ReconciliationRequestDetails getDetails(String token) {
+    public synchronized ReconciliationRequestDetails getDetails(String token) {
+        if (!reconciliationTokensMap.containsKey(token))
+            throw new RequestTokenNotFound("Request token not found");
         ReconciliationRequestDetails source = reconciliationTokensMap.get(token);
         return ReconciliationRequestDetails.builder()
                 .fileName1(source.getFileName1())
                 .fileName2(source.getFileName2())
                 .creationDate(source.getCreationDate())
-                .isReadyForProcessing(source.isReadyForProcessing())
+                .status(source.getStatus())
                 .build();
     }
 

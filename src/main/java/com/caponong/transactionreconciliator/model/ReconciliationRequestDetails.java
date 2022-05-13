@@ -1,5 +1,6 @@
 package com.caponong.transactionreconciliator.model;
 
+import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class ReconciliationRequestDetails {
+public class  ReconciliationRequestDetails {
 
     private String fileName1;
     
@@ -15,5 +16,5 @@ public class ReconciliationRequestDetails {
     
     private LocalDateTime creationDate;
     
-    private boolean isReadyForProcessing;
+    private ReconciliationRequestStatus status;
 }
