@@ -19,18 +19,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class TransactionsApiController implements TransactionsApi {
 
     @Autowired
-    private ReconciliationService reconciliationService;    
-    
+    private ReconciliationService reconciliationService;
+
     @Override
     @PostMapping("/upload")
     public ResponseEntity<Response<TransactionsUploadResponse>> uploadTransaction(
             @RequestPart("firstTransactionSet") MultipartFile firstTransactionSet,
-            @RequestPart("secondTransactionSet")  MultipartFile secondTransactionSet) {
+            @RequestPart("secondTransactionSet") MultipartFile secondTransactionSet) {
 
         CsvFileUtil.checkIfFileUploadedIsCsv(firstTransactionSet);
         CsvFileUtil.checkIfFileUploadedIsCsv(secondTransactionSet);
-        
-        return ResponseConverter.convert(reconciliationService.uploadTransaction(firstTransactionSet,secondTransactionSet));
+
+        return ResponseConverter.convert(reconciliationService.uploadTransaction(firstTransactionSet, secondTransactionSet));
     }
 
     @Override

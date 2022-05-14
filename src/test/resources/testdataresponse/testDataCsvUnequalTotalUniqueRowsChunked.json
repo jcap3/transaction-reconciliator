@@ -1,0 +1,116 @@
+{
+  "message": "success",
+  "code": "0",
+  "body": {
+    "firstTransactionSet": {
+      "fileName": "testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv",
+      "unmatchedTransactions": [
+        {
+          "transaction": {
+            "profileName": "Card Campaign",
+            "transactionDate": "2014-01-12 10:38:21",
+            "transactionAmount": "-238665",
+            "transactionNarrative": "Builders World M102412    Maun          BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0164012384813703",
+            "transactionType": "0",
+            "walletReference": "P_NzIxMjEwMDlfMTM3NjkxMDAwOC4yMDc0"
+          },
+          "potentialMatches": []
+        },
+        {
+          "transaction": {
+            "profileName": "Card Campaign",
+            "transactionDate": "2014-01-12 13:12:38",
+            "transactionAmount": "-4990",
+            "transactionNarrative": "196211 NANDOS PHAKALANE   BOTSWANA      BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0284012331589177",
+            "transactionType": "0",
+            "walletReference": "P_NzI3MzcwMjNfMTM3NjQ2NDc5Ny41NDAy"
+          },
+          "potentialMatches": [
+            {
+              "profileName": "Card Campaign",
+              "transactionDate": "",
+              "transactionAmount": "-4990",
+              "transactionNarrative": "196211 NANDOS PHAKALANE   BOTSWANA      BW",
+              "transactionDescription": "DEDUCT",
+              "transactionId": "0284012331589177",
+              "transactionType": "0",
+              "walletReference": ""
+            }
+          ]
+        },
+        {
+          "transaction": {
+            "profileName": "Bogus Campaign",
+            "transactionDate": "2014-01-12 13:09:53",
+            "transactionAmount": "-50000",
+            "transactionNarrative": "THAMAGA ATM               AWS           BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0304012329938257",
+            "transactionType": "1",
+            "walletReference": "P_Nzc0NDc0NjRfMTM4MjQzNTM5MC45MTc5"
+          },
+          "potentialMatches": []
+        },
+        {
+          "transaction": {
+            "profileName": "Card Campaign",
+            "transactionDate": "2014-01-12 10:34:07",
+            "transactionAmount": "-30000",
+            "transactionNarrative": "*MAHALAPYE ENGEN          MAHALAPYE     BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0384012380477970",
+            "transactionType": "1",
+            "walletReference": "P_NzQzOTMwMzBfMTM4MDg5MzIwMS45MTA0"
+          },
+          "potentialMatches": []
+        }
+      ]
+    },
+    "secondTransactionSet": {
+      "fileName": "testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv",
+      "unmatchedTransactions": [
+        {
+          "transaction": {
+            "profileName": "Card Campaign",
+            "transactionDate": "",
+            "transactionAmount": "-4990",
+            "transactionNarrative": "196211 NANDOS PHAKALANE   BOTSWANA      BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0284012331589177",
+            "transactionType": "0",
+            "walletReference": ""
+          },
+          "potentialMatches": [
+            {
+              "profileName": "Card Campaign",
+              "transactionDate": "2014-01-12 13:12:38",
+              "transactionAmount": "-4990",
+              "transactionNarrative": "196211 NANDOS PHAKALANE   BOTSWANA      BW",
+              "transactionDescription": "DEDUCT",
+              "transactionId": "0284012331589177",
+              "transactionType": "0",
+              "walletReference": "P_NzI3MzcwMjNfMTM3NjQ2NDc5Ny41NDAy"
+            }
+          ]
+        },
+        {
+          "transaction": {
+            "profileName": "Card Campaign",
+            "transactionDate": "2014-01-12 13:09:53",
+            "transactionAmount": "-50000",
+            "transactionNarrative": "THAMAGA ATM               BWS           BW",
+            "transactionDescription": "DEDUCT",
+            "transactionId": "0304012329938257",
+            "transactionType": "1",
+            "walletReference": "X_Nzc0NDc0NjRfMTM4MjQzNTM5MC45MTc5"
+          },
+          "potentialMatches": []
+        }
+      ]
+    }
+  }
+}

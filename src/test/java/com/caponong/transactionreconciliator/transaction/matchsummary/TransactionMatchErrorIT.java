@@ -6,7 +6,6 @@ import com.caponong.transactionreconciliator.error.exception.RequestTokenNotFoun
 import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.services.impl.ReconciliationRequestHandlerServiceImpl;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -16,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class TransactionMatchValidationIT extends ApplicationTest {
+public class TransactionMatchErrorIT extends ApplicationTest {
     
     @MockBean
     public ReconciliationRequestHandlerServiceImpl reconciliationRequestHandlerService;

@@ -1,6 +1,7 @@
 package com.caponong.transactionreconciliator;
 
 import com.caponong.transactionreconciliator.repository.TransactionRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -20,6 +21,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class})
@@ -69,6 +74,11 @@ public abstract class ApplicationTest {
         File file = ResourceUtils.getFile("classpath:testdatacsv/" + fileName);
         return new MockMultipartFile(requestPartName, file.getName(), "text/csv", Files.readAllBytes(file.toPath()));
     }
+    
+    protected String getTestDataString (String fileName) throws IOException {
+        File file = ResourceUtils.getFile("classpath:testdataresponse/" + fileName);
+        return new String(Files.readAllBytes(file.toPath()));
+    }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     protected void wait(int millis) throws InterruptedException {
@@ -76,5 +86,23 @@ public abstract class ApplicationTest {
         waiter.await(millis, TimeUnit.MILLISECONDS);
     }
 
+    protected String executeUploadAndGetReconciliationToken(String fileName1, String fileName2) throws Exception {
+        String response = mockMvc.perform(
+                multipart(TRANSACTION_UPLOAD_API)
+                        .file(getTestDataCsv("firstTransactionSet", fileName1))
+                        .file(getTestDataCsv("secondTransactionSet", fileName2))
+                        .servletPath(TRANSACTION_UPLOAD_API)
+
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        wait(1000);
+
+        JsonNode rootNode = objectMapper.readTree(response);
+        return rootNode.get("body").get("reconciliationToken").textValue();
+    }
 
 }

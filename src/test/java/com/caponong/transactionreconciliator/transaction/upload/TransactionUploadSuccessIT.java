@@ -40,4 +40,27 @@ public class TransactionUploadSuccessIT extends ApplicationTest {
         Assert.assertEquals(3, transactionRepository.getTotalUniqueTransactions(FIRST_TRANSACTION_IDENTIFIER + "%"));
         Assert.assertEquals(3, transactionRepository.getTotalUniqueTransactions(SECOND_TRANSACTION_IDENTIFIER + "%"));
     }
+    
+    @Test
+    public void testChunkedUpload() throws Exception {
+        mockMvc.perform(
+                multipart(TRANSACTION_UPLOAD_API)
+                        .file(getTestDataCsv("firstTransactionSet", "testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv"))
+                        .file(getTestDataCsv("secondTransactionSet", "testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv"))
+                        .servletPath(TRANSACTION_UPLOAD_API)
+
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code", is("0")))
+                .andExpect(jsonPath("$.message", is("success")))
+                .andExpect(jsonPath("$.body.reconciliationToken").exists())
+                .andExpect(jsonPath("$.body.tokenExpiry").exists())
+                .andDo(print());
+
+        wait(500);
+
+        Assert.assertEquals(17, transactionRepository.getTotalUniqueTransactions(FIRST_TRANSACTION_IDENTIFIER + "%"));
+        Assert.assertEquals(15, transactionRepository.getTotalUniqueTransactions(SECOND_TRANSACTION_IDENTIFIER + "%"));
+    }
 }

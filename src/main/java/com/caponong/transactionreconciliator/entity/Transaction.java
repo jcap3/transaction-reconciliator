@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import java.math.BigDecimal;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,9 +19,9 @@ public class Transaction {
 
     private String profileName;
 
-    private Date transactionDate;
+    private String transactionDate;
 
-    private BigDecimal transactionAmount;
+    private String transactionAmount;
 
     private String transactionNarrative;
 

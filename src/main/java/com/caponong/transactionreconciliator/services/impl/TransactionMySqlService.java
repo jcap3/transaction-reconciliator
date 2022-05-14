@@ -28,6 +28,12 @@ public class TransactionMySqlService implements TransactionsDbService {
     public void save(Transaction transaction) {
         repository.save(transaction);
     }
+    
+    @Transactional
+    @Override
+    public void save(List<Transaction> transactions){
+        repository.saveAll(transactions);
+    }
 
     @Transactional
     @Override

@@ -1,5 +1,6 @@
 package com.caponong.transactionreconciliator.services.impl;
 
+import com.caponong.transactionreconciliator.advice.ReconciliationTokenConsumer;
 import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.InternalServerError;
 import com.caponong.transactionreconciliator.error.exception.RequestInterruptedError;
@@ -58,10 +59,10 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 .build();
     }
 
+    @ReconciliationTokenConsumer
     @Override
     public MatchTransactionsCountResponse getMatchSummary(String reconciliationToken) {
         ReconciliationRequestDetails reconciliationRequestDetails = reconciliationRequestHandlerService.getDetails(reconciliationToken);
-        verifyRequestStatus(reconciliationRequestDetails.getStatus());
         
         try {
             Future<FileMatchResult> file1 = transactionReconciliator.getFileMatchResult(reconciliationRequestDetails.getFileName1(),
@@ -82,9 +83,13 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         }
     }
 
+    @ReconciliationTokenConsumer
     @Override
     @SuppressWarnings("unchecked")
     public UnmatchedTransactionsResponse getUnmatchedTransactions(String reconciliationToken) {
+        
+        ReconciliationRequestDetails reconciliationRequestDetails = reconciliationRequestHandlerService.getDetails(reconciliationToken);
+        
         try {
             Future<List<UnmatchedTransaction>> futureUnmatchedTransactionsOne =
                     transactionReconciliator.getUnmatchedTransactionSummary(FIRST_TRANSACTION_IDENTIFIER, reconciliationToken);
@@ -92,10 +97,12 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                     transactionReconciliator.getUnmatchedTransactionSummary(SECOND_TRANSACTION_IDENTIFIER, reconciliationToken);
             
             UnmatchedTransactionsWrapper wrapperOne = UnmatchedTransactionsWrapper.builder()
+                    .fileName(reconciliationRequestDetails.getFileName1())
                     .unmatchedTransactions((List<UnmatchedTransaction>)waitForFutureResult(futureUnmatchedTransactionsOne))
                     .build();
 
             UnmatchedTransactionsWrapper wrapperTwo = UnmatchedTransactionsWrapper.builder()
+                    .fileName(reconciliationRequestDetails.getFileName2())
                     .unmatchedTransactions((List<UnmatchedTransaction>)waitForFutureResult(futureUnmatchedTransactionsTwo))
                     .build();
             
@@ -118,11 +125,4 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         }
     }
     
-    private void verifyRequestStatus(ReconciliationRequestStatus status) {
-        if (status == ReconciliationRequestStatus.NOT_READY)
-            throw new RequestNotReadyError("Requested token not yet ready");
-        else if (status == ReconciliationRequestStatus.ERROR)
-            throw new RequestInterruptedError("Request token encountered an error");
-            
-    }
 }

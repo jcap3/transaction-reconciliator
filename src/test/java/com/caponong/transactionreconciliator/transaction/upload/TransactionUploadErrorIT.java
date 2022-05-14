@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class TransactionUploadValidationIT extends ApplicationTest {
+public class TransactionUploadErrorIT extends ApplicationTest {
 
     @Test
     public void testMissingRequestPart() throws Exception {

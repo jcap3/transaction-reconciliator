@@ -8,6 +8,8 @@ import java.util.List;
 public interface TransactionsDbService {
 
     void save(Transaction transaction);
+    
+    void save(List<Transaction> transaction);
 
     void deleteTransactionsByToken(String token);
     

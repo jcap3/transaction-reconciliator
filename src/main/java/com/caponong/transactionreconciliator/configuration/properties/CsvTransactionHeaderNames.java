@@ -12,22 +12,22 @@ import org.springframework.validation.annotation.Validated;
 @Configuration
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@ConfigurationProperties("csv.transaction.index")
-public class CsvTransactionIndexFormatConfigProperties {
+@ConfigurationProperties("csv.transaction.headername")
+public class CsvTransactionHeaderNames {
 
-    private int profileName;
+    private String profileName;
     
-    private int transactionDate;
+    private String transactionDate;
     
-    private int transactionAmount;
+    private String transactionAmount;
     
-    private int transactionNarrative;
+    private String transactionNarrative;
     
-    private int transactionDescription;
+    private String transactionDescription;
     
-    private int transactionId;
+    private String transactionId;
     
-    private int transactionType;
+    private String transactionType;
     
-    private int walletReference;
+    private String walletReference;
 }

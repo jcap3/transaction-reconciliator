@@ -16,6 +16,8 @@ public class UnmatchedTransactionsResponse {
     @Data
     @Builder
     public static class UnmatchedTransactionsWrapper {
+        
+        private String fileName;
 
         private List<UnmatchedTransaction> unmatchedTransactions;
     }

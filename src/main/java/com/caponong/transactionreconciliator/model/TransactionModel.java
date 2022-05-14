@@ -3,18 +3,15 @@ package com.caponong.transactionreconciliator.model;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 @Data
 @Builder
 public class TransactionModel {
 
     private String profileName;
 
-    private Date transactionDate;
+    private String transactionDate;
 
-    private BigDecimal transactionAmount;
+    private String transactionAmount;
 
     private String transactionNarrative;
 

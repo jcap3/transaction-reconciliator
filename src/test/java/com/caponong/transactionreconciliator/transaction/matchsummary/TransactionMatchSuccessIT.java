@@ -42,28 +42,49 @@ public class TransactionMatchSuccessIT extends ApplicationTest {
                 .andDo(print());
     }
     
-    @Test // todo
+    @Test
     public void testSuccessMatchChunkedData() throws Exception {
-        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvOneMatch_FirstFile.csv",
-                "testDataCsvOneMatch_SecondFile.csv");
+        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv",
+                "testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv");
+
+        mockMvc.perform(
+                get(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API)
+                        .servletPath(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code", is("0")))
+                .andExpect(jsonPath("$.message", is("success")))
+                .andExpect(jsonPath("$.body.firstTransactionSet.fileName", is("testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv")))
+                .andExpect(jsonPath("$.body.firstTransactionSet.totalUniqueRecords", is(17)))
+                .andExpect(jsonPath("$.body.firstTransactionSet.matchedTransactions", is(13)))
+                .andExpect(jsonPath("$.body.firstTransactionSet.unmatchedTransactions", is(4)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.fileName", is("testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv")))
+                .andExpect(jsonPath("$.body.secondTransactionSet.totalUniqueRecords", is(15)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.matchedTransactions", is(13)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.unmatchedTransactions", is(2)))
+                .andDo(print());
     }
     
-    private String executeUploadAndGetReconciliationToken(String fileName1, String fileName2) throws Exception {
-        String response = mockMvc.perform(
-                multipart(TRANSACTION_UPLOAD_API)
-                        .file(getTestDataCsv("firstTransactionSet", fileName1))
-                        .file(getTestDataCsv("secondTransactionSet", fileName2))
-                        .servletPath(TRANSACTION_UPLOAD_API)
+    @Test
+    public void testMultipleMatchAndUnmatch() throws Exception {
+        String reconciliationToken = executeUploadAndGetReconciliationToken("ClientMarkoffFile20140113.csv",
+                "PaymentologyMarkoffFile20140113.csv");
 
-        ).andDo(print())
+        mockMvc.perform(
+                get(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API)
+                        .servletPath(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        
-        wait(500);
-        
-        JsonNode rootNode = objectMapper.readTree(response);
-        return rootNode.get("body").get("reconciliationToken").textValue();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code", is("0")))
+                .andExpect(jsonPath("$.message", is("success")))
+                .andExpect(jsonPath("$.body.firstTransactionSet.fileName", is("ClientMarkoffFile20140113.csv")))
+                .andExpect(jsonPath("$.body.firstTransactionSet.totalUniqueRecords", is(304)))
+                .andExpect(jsonPath("$.body.firstTransactionSet.matchedTransactions", is(288)))
+                .andExpect(jsonPath("$.body.firstTransactionSet.unmatchedTransactions", is(16)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.fileName", is("PaymentologyMarkoffFile20140113.csv")))
+                .andExpect(jsonPath("$.body.secondTransactionSet.totalUniqueRecords", is(304)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.matchedTransactions", is(288)))
+                .andExpect(jsonPath("$.body.secondTransactionSet.unmatchedTransactions", is(16)))
+                .andDo(print());
     }
 }
