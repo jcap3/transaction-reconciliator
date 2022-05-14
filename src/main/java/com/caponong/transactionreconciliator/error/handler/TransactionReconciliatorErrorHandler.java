@@ -48,7 +48,7 @@ public class TransactionReconciliatorErrorHandler extends ResponseEntityExceptio
     public ResponseEntity<Object> handleRequestNotReady(RequestNotReadyError ex, WebRequest request) {
         log.error(ex.getMessage());
         return handleExceptionInternal(ex, ResponseConverter.convertError(TransactionReconciliatorErrorCodes.REQUEST_NOT_YET_READY), new HttpHeaders(),
-                HttpStatus.BAD_REQUEST, request);
+                HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 
     @ExceptionHandler(RequestInterruptedError.class)

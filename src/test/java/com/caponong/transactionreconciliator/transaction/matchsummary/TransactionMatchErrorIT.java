@@ -79,7 +79,7 @@ public class TransactionMatchErrorIT extends ApplicationTest {
         mockMvc.perform(
                 get(BASE_PATH + TEST_RECONCILIATION_TOKEN + TRANSACTION_MATCH_SUMMARY_API)
                         .servletPath(BASE_PATH + TEST_RECONCILIATION_TOKEN + TRANSACTION_MATCH_SUMMARY_API))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isServiceUnavailable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code", is("999")))
                 .andExpect(jsonPath("$.message", is("error")))
