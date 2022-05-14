@@ -1,10 +1,7 @@
 package com.caponong.transactionreconciliator.services.impl;
 
 import com.caponong.transactionreconciliator.advice.ReconciliationTokenConsumer;
-import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.InternalServerError;
-import com.caponong.transactionreconciliator.error.exception.RequestInterruptedError;
-import com.caponong.transactionreconciliator.error.exception.RequestNotReadyError;
 import com.caponong.transactionreconciliator.model.*;
 import com.caponong.transactionreconciliator.model.MatchTransactionsCountResponse.FileMatchResult;
 import com.caponong.transactionreconciliator.model.UnmatchedTransactionsResponse.UnmatchedTransactionsWrapper;
@@ -12,12 +9,15 @@ import com.caponong.transactionreconciliator.services.ReconciliationRequestHandl
 import com.caponong.transactionreconciliator.services.ReconciliationService;
 import com.caponong.transactionreconciliator.services.TransactionsReader;
 import com.caponong.transactionreconciliator.services.Writer;
+import com.caponong.transactionreconciliator.util.CsvFileUtil;
+import com.caponong.transactionreconciliator.util.ReconciliationTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,7 +31,7 @@ import static java.util.UUID.randomUUID;
 public class ReconciliationServiceImpl implements ReconciliationService {
 
     @Autowired
-    private Writer<MultipartCsvFile> databaseWriter;
+    private Writer<CsvFile> databaseWriter;
 
     @Autowired
     private ReconciliationRequestHandlerService reconciliationRequestHandlerService;
@@ -49,9 +49,14 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         String generatedReconciliationToken = String.valueOf(randomUUID());
         reconciliationRequestHandlerService.addRequestToken(generatedReconciliationToken,
                 firstTransactionSet.getOriginalFilename(), secondTransactionSet.getOriginalFilename());
+        
+        File firstTransactionSetFile = CsvFileUtil.writeMultiPartFileToCreatedFile(firstTransactionSet, 
+                ReconciliationTokenUtil.addIdentifier(generatedReconciliationToken, FIRST_TRANSACTION_IDENTIFIER));
+        File secondTransactionSetFile = CsvFileUtil.writeMultiPartFileToCreatedFile(secondTransactionSet, 
+                ReconciliationTokenUtil.addIdentifier(generatedReconciliationToken, SECOND_TRANSACTION_IDENTIFIER));
 
-        databaseWriter.write(new MultipartCsvFile(firstTransactionSet, FIRST_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
-        databaseWriter.write(new MultipartCsvFile(secondTransactionSet, SECOND_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
+        databaseWriter.write(new CsvFile(firstTransactionSetFile, FIRST_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
+        databaseWriter.write(new CsvFile(secondTransactionSetFile, SECOND_TRANSACTION_IDENTIFIER + generatedReconciliationToken));
 
         return TransactionsUploadResponse.builder()
                 .reconciliationToken(generatedReconciliationToken)

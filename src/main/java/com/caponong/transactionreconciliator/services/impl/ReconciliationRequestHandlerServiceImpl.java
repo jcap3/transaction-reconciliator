@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.caponong.transactionreconciliator.util.CsvFileUtil.deleteFileByReconciliationToken;
+
 @Service
 @Slf4j
 public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRequestHandlerService {
@@ -46,6 +48,7 @@ public class ReconciliationRequestHandlerServiceImpl implements ReconciliationRe
             log.info("Retiring expired token: {}", expiredToken);
             reconciliationTokensMap.remove(expiredToken);
             transactionsDbService.deleteTransactionsByToken(expiredToken);
+            deleteFileByReconciliationToken(expiredToken);
         });
     }
 

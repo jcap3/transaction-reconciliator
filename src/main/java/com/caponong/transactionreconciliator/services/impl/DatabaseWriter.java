@@ -3,7 +3,7 @@ package com.caponong.transactionreconciliator.services.impl;
 import com.caponong.transactionreconciliator.entity.Transaction;
 import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.InternalServerError;
-import com.caponong.transactionreconciliator.model.MultipartCsvFile;
+import com.caponong.transactionreconciliator.model.CsvFile;
 import com.caponong.transactionreconciliator.services.ReconciliationRequestHandlerService;
 import com.caponong.transactionreconciliator.services.TransactionsDbService;
 import com.caponong.transactionreconciliator.services.Writer;
@@ -27,7 +27,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class DatabaseWriter implements Writer<MultipartCsvFile> {
+public class DatabaseWriter implements Writer<CsvFile> {
 
     @Autowired
     private TransactionsDbService transactionsDbService;
@@ -44,9 +44,9 @@ public class DatabaseWriter implements Writer<MultipartCsvFile> {
     
     @Override
     @Async("threadPoolTaskExecutor")
-    public void write(MultipartCsvFile data) {
+    public void write(CsvFile data) {
         
-        try (Reader reader = new BufferedReader(new InputStreamReader(data.getMultipartFile().getInputStream()))) {
+        try (Reader reader = new BufferedReader(new FileReader(data.getFile()))) {
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                     .builder()
                     .setHeader().setSkipHeaderRecord(true)

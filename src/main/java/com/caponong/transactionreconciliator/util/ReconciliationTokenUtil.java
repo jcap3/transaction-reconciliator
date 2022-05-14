@@ -21,4 +21,8 @@ public class ReconciliationTokenUtil {
     public static String createLikeExpression(String token, String identifier) {
         return StringUtils.join(new String[]{identifier, token, "%"});
     }
+    
+    public static String addIdentifier(String reconciliationToken, String identifier) {
+        return StringUtils.join(new String[] {identifier, reconciliationToken});
+    }
 }
