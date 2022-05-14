@@ -3,10 +3,7 @@ package com.caponong.transactionreconciliator;
 import com.caponong.transactionreconciliator.repository.TransactionRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +19,8 @@ import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.caponong.transactionreconciliator.constant.TransactionsConstant.FIRST_TRANSACTION_IDENTIFIER;
+import static com.caponong.transactionreconciliator.constant.TransactionsConstant.SECOND_TRANSACTION_IDENTIFIER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,7 +85,8 @@ public abstract class ApplicationTest {
         waiter.await(millis, TimeUnit.MILLISECONDS);
     }
 
-    protected String executeUploadAndGetReconciliationToken(String fileName1, String fileName2) throws Exception {
+    protected String executeUploadAndGetReconciliationToken(String fileName1, int expectedTransactions1, 
+                                                            String fileName2, int expectedTransactions2) throws Exception {
         String response = mockMvc.perform(
                 multipart(TRANSACTION_UPLOAD_API)
                         .file(getTestDataCsv("firstTransactionSet", fileName1))
@@ -99,10 +99,20 @@ public abstract class ApplicationTest {
                 .getResponse()
                 .getContentAsString();
 
-        wait(1000);
+        waitAllDataToBeInserted(expectedTransactions1, expectedTransactions2);
 
         JsonNode rootNode = objectMapper.readTree(response);
         return rootNode.get("body").get("reconciliationToken").textValue();
+    }
+
+    private void waitAllDataToBeInserted(int expectedTransactions1, int expectedTransactions2) throws InterruptedException {
+        int tries = 5;
+        do {
+            wait(1000);
+            if (tries--==0)
+                break;
+        } while ((expectedTransactions1 != transactionRepository.getTotalUniqueTransactions(FIRST_TRANSACTION_IDENTIFIER + "%") &&
+                (expectedTransactions2 != transactionRepository.getTotalUniqueTransactions(SECOND_TRANSACTION_IDENTIFIER + "%"))));
     }
 
 }

@@ -21,8 +21,8 @@ public class TransactionMatchSuccessIT extends ApplicationTest {
     @Test
     public void testSuccessMatch() throws Exception {
 
-        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvOneMatch_FirstFile.csv",
-                "testDataCsvOneMatch_SecondFile.csv");
+        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvOneMatch_FirstFile.csv", 4,
+                "testDataCsvOneMatch_SecondFile.csv", 4);
 
         mockMvc.perform(
                 get(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API)
@@ -44,8 +44,8 @@ public class TransactionMatchSuccessIT extends ApplicationTest {
     
     @Test
     public void testSuccessMatchChunkedData() throws Exception {
-        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv",
-                "testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv");
+        String reconciliationToken = executeUploadAndGetReconciliationToken("testDataCsvUnequalTotalUniqueRowsChunked_FirstFile.csv", 17,
+                "testDataCsvUnequalTotalUniqueRowsChunked_SecondFile.csv", 15);
 
         mockMvc.perform(
                 get(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API)
@@ -67,8 +67,8 @@ public class TransactionMatchSuccessIT extends ApplicationTest {
     
     @Test
     public void testMultipleMatchAndUnmatch() throws Exception {
-        String reconciliationToken = executeUploadAndGetReconciliationToken("ClientMarkoffFile20140113.csv",
-                "PaymentologyMarkoffFile20140113.csv");
+        String reconciliationToken = executeUploadAndGetReconciliationToken("ClientMarkoffFile20140113.csv", 304,
+                "PaymentologyMarkoffFile20140113.csv", 304);
 
         mockMvc.perform(
                 get(BASE_PATH + reconciliationToken + TRANSACTION_MATCH_SUMMARY_API)
