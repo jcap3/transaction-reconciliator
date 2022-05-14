@@ -11,5 +11,7 @@ public class TransactionsConstant {
     public static final String RECONCILIATION_TOKEN_PATTERN = "[\\w-]{36}";
     
     public static final String JAVA_TEMP_FOLDER = "java.io.tmpdir";
+    
+    public static final String RECONCILIATION_TOKEN_FOLDER = "/reconciliationTokens/";
 
 }

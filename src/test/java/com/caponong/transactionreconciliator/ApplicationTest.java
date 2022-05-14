@@ -1,8 +1,10 @@
 package com.caponong.transactionreconciliator;
 
 import com.caponong.transactionreconciliator.repository.TransactionRepository;
+import com.caponong.transactionreconciliator.util.ReconciliationTokenUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -19,8 +22,9 @@ import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.caponong.transactionreconciliator.constant.TransactionsConstant.FIRST_TRANSACTION_IDENTIFIER;
-import static com.caponong.transactionreconciliator.constant.TransactionsConstant.SECOND_TRANSACTION_IDENTIFIER;
+import static com.caponong.transactionreconciliator.constant.TransactionsConstant.*;
+import static com.caponong.transactionreconciliator.constant.TransactionsConstant.RECONCILIATION_TOKEN_FOLDER;
+import static com.caponong.transactionreconciliator.util.CsvFileUtil.createReconciliationDirectory;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +61,8 @@ public abstract class ApplicationTest {
     }
 
     @Before
-    public void before() {
+    public void before() throws IOException {
+        createReconciliationDirectory();
         transactionRepository.deleteAll();
     }
 
@@ -67,6 +72,7 @@ public abstract class ApplicationTest {
 
     @After
     public void after() {
+        clearReconciliationFolder();
     }
 
     protected MockMultipartFile getTestDataCsv(String requestPartName, String fileName) throws IOException {
@@ -113,6 +119,11 @@ public abstract class ApplicationTest {
                 break;
         } while ((expectedTransactions1 != transactionRepository.getTotalUniqueTransactions(FIRST_TRANSACTION_IDENTIFIER + "%") &&
                 (expectedTransactions2 != transactionRepository.getTotalUniqueTransactions(SECOND_TRANSACTION_IDENTIFIER + "%"))));
+    }
+    
+    private void clearReconciliationFolder() {
+        FileSystemUtils.deleteRecursively(new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), 
+                RECONCILIATION_TOKEN_FOLDER})));
     }
 
 }

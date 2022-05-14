@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static com.caponong.transactionreconciliator.constant.TransactionsConstant.*;
@@ -28,7 +29,8 @@ public class CsvFileUtil {
     
     public static File writeMultiPartFileToCreatedFile (MultipartFile sourceMultiPartFile, 
                                                         String generatedReconciliationTokenWithIdentifier) {
-        File file = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), "/", generatedReconciliationTokenWithIdentifier}));
+        File file = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), RECONCILIATION_TOKEN_FOLDER, 
+                generatedReconciliationTokenWithIdentifier}));
         try (OutputStream os1 = new FileOutputStream(file)) {
             os1.write(sourceMultiPartFile.getBytes());
         } catch (IOException e) {
@@ -38,9 +40,9 @@ public class CsvFileUtil {
     }
     
     public static void deleteFileByReconciliationToken (String reconciliationToken) {
-        File fileToDelete1 = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), "/",
+        File fileToDelete1 = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), RECONCILIATION_TOKEN_FOLDER,
                 ReconciliationTokenUtil.addIdentifier(reconciliationToken, FIRST_TRANSACTION_IDENTIFIER)}));
-        File fileToDelete2 = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), "/",
+        File fileToDelete2 = new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), RECONCILIATION_TOKEN_FOLDER,
                 ReconciliationTokenUtil.addIdentifier(reconciliationToken, SECOND_TRANSACTION_IDENTIFIER)}));
 
         try {
@@ -53,4 +55,7 @@ public class CsvFileUtil {
         
     }
 
+    public static void createReconciliationDirectory() throws IOException {
+        Files.createDirectories(Paths.get(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), RECONCILIATION_TOKEN_FOLDER})));
+    }
 }
