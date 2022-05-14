@@ -21,6 +21,7 @@ public class TransactionsApiController implements TransactionsApi {
     @Autowired
     private ReconciliationService reconciliationService;
 
+    @CrossOrigin
     @Override
     @PostMapping("/upload")
     public ResponseEntity<Response<TransactionsUploadResponse>> uploadTransaction(
@@ -33,6 +34,7 @@ public class TransactionsApiController implements TransactionsApi {
         return ResponseConverter.convert(reconciliationService.uploadTransaction(firstTransactionSet, secondTransactionSet));
     }
 
+    @CrossOrigin
     @Override
     @GetMapping("/{reconciliationToken}/matchSummary")
     public ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
@@ -40,6 +42,7 @@ public class TransactionsApiController implements TransactionsApi {
         return ResponseConverter.convert(reconciliationService.getMatchSummary(reconciliationToken));
     }
 
+    @CrossOrigin
     @Override
     @GetMapping("/{reconciliationToken}/unmatchedTransactionsSummary")
     public ResponseEntity<Response<UnmatchedTransactionsResponse>> unmatchedTransactions(

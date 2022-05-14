@@ -1,7 +1,6 @@
 package com.caponong.transactionreconciliator;
 
 import com.caponong.transactionreconciliator.repository.TransactionRepository;
-import com.caponong.transactionreconciliator.util.ReconciliationTokenUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
@@ -72,7 +71,7 @@ public abstract class ApplicationTest {
 
     @After
     public void after() {
-        clearReconciliationFolder();
+        clearReconciliationTokenFolder();
     }
 
     protected MockMultipartFile getTestDataCsv(String requestPartName, String fileName) throws IOException {
@@ -121,7 +120,7 @@ public abstract class ApplicationTest {
                 (expectedTransactions2 != transactionRepository.getTotalUniqueTransactions(SECOND_TRANSACTION_IDENTIFIER + "%"))));
     }
     
-    private void clearReconciliationFolder() {
+    private void clearReconciliationTokenFolder() {
         FileSystemUtils.deleteRecursively(new File(StringUtils.join(new String[]{System.getProperty(JAVA_TEMP_FOLDER), 
                 RECONCILIATION_TOKEN_FOLDER})));
     }
