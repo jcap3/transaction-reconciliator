@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 
 import static com.caponong.transactionreconciliator.constant.TransactionsConstant.RECONCILIATION_TOKEN_PATTERN;
 
+@SuppressWarnings("deprecation")
 @Api(tags = {"Transactions"}, description = "Transactions Reconciliation APIs")
 public interface TransactionsApi {
 
