@@ -22,8 +22,7 @@ public interface TransactionsApi {
             response = TransactionsUploadResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = TransactionsUploadResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Response.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Response.class)})
+            @ApiResponse(code = 400, message = "Bad Request", response = Response.class)})
     ResponseEntity<Response<TransactionsUploadResponse>> uploadTransaction(
             @RequestPart("firstTransactionSet") @ApiParam(value = "First TransactionSet to compare", required = true) MultipartFile firstTransactionSet,
             @RequestPart("secondTransactionSet") @ApiParam(value = "Second TransactionSet to compare", required = true) MultipartFile secondTransactionSet);
@@ -34,7 +33,7 @@ public interface TransactionsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = MatchTransactionsCountResponse.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Response.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Response.class)})
+            @ApiResponse(code = 503, message = "Unavailable", response = Response.class)})
     ResponseEntity<Response<MatchTransactionsCountResponse>> matchedTransactionsCount(
             @Pattern(regexp = RECONCILIATION_TOKEN_PATTERN)
             @PathVariable(name = "reconciliationToken") 
@@ -46,7 +45,7 @@ public interface TransactionsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = UnmatchedTransactionsResponse.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Response.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Response.class)})
+            @ApiResponse(code = 503, message = "Unavailable", response = Response.class)})
     ResponseEntity<Response<UnmatchedTransactionsResponse>> unmatchedTransactions(
             @Pattern(regexp = RECONCILIATION_TOKEN_PATTERN)
             @PathVariable(name = "reconciliationToken") 
