@@ -22,6 +22,14 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 mvn spring-boot:run
 ```
 
+If mysql instance is an issue for locally running the application, then just copy and replace the 
+mysql datasource config into h2 config found in:
+```shell
+/src/test/resources/application.properties
+```
+
+Just take not that this is not recommended as this will most likely consume the memory of the server. 
+
 ## Design
    
 1. Receiving files:
