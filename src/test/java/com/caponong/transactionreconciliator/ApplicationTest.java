@@ -72,7 +72,6 @@ public abstract class ApplicationTest {
     @After
     public void after() {
         clearReconciliationTokenFolder();
-        transactionRepository.deleteAll();
     }
 
     protected MockMultipartFile getTestDataCsv(String requestPartName, String fileName) throws IOException {

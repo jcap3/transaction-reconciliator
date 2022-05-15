@@ -5,6 +5,7 @@ import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.RequestTokenNotFound;
 import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.services.impl.ReconciliationRequestHandlerServiceImpl;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,10 +17,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class TransactionMatchErrorIT extends ApplicationTest {
-    
+
     @MockBean
     public ReconciliationRequestHandlerServiceImpl reconciliationRequestHandlerService;
-    
+
+    @After
+    public void after() {
+        super.after();
+        Mockito.reset(reconciliationRequestHandlerService);
+    }
+
     @Test
     public void testInvalidReconciliationToken() throws Exception {
         mockMvc.perform(
@@ -33,7 +40,7 @@ public class TransactionMatchErrorIT extends ApplicationTest {
                 .andExpect(jsonPath("$.errorCode.message", is("token should only contain numbers, letters, and - with length of 36")))
                 .andDo(print());
     }
-    
+
     @Test
     public void testRequestEncounteredAnError() throws Exception {
 
@@ -54,10 +61,10 @@ public class TransactionMatchErrorIT extends ApplicationTest {
 
     @Test
     public void testRequestTokenNotFound() throws Exception {
-        
+
         Mockito.when(reconciliationRequestHandlerService.getDetails(Mockito.any(String.class)))
                 .thenThrow(new RequestTokenNotFound("Request token not found"));
-        
+
         mockMvc.perform(
                 get(BASE_PATH + TEST_RECONCILIATION_TOKEN3 + TRANSACTION_MATCH_SUMMARY_API)
                         .servletPath(BASE_PATH + TEST_RECONCILIATION_TOKEN3 + TRANSACTION_MATCH_SUMMARY_API))
@@ -72,7 +79,7 @@ public class TransactionMatchErrorIT extends ApplicationTest {
 
     @Test
     public void testRequestNotReady() throws Exception {
-        
+
         Mockito.when(reconciliationRequestHandlerService.getDetails(TEST_RECONCILIATION_TOKEN))
                 .thenReturn(ReconciliationRequestDetails.builder().status(ReconciliationRequestStatus.NOT_READY).build());
 

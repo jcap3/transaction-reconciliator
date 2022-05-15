@@ -5,6 +5,7 @@ import com.caponong.transactionreconciliator.enums.ReconciliationRequestStatus;
 import com.caponong.transactionreconciliator.error.exception.RequestTokenNotFound;
 import com.caponong.transactionreconciliator.model.ReconciliationRequestDetails;
 import com.caponong.transactionreconciliator.services.impl.ReconciliationRequestHandlerServiceImpl;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,12 @@ public class UnmatchedTransactionErrorIT extends ApplicationTest {
 
     @MockBean
     public ReconciliationRequestHandlerServiceImpl reconciliationRequestHandlerService;
+    
+    @After
+    public void after () {
+        super.after();
+        Mockito.reset(reconciliationRequestHandlerService);
+    }
 
     @Test
     public void testInvalidReconciliationToken() throws Exception {
