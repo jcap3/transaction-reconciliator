@@ -1,5 +1,9 @@
 package com.caponong.transactionreconciliator.configuration;
 
+import com.caponong.transactionreconciliator.entity.Transaction;
+import com.caponong.transactionreconciliator.model.*;
+import com.fasterxml.classmate.TypeResolver;
+import com.google.common.collect.Sets;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -15,12 +19,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfiguration {
 
     @Bean
-    public Docket swaggerApi() {
+    public Docket swaggerApi(TypeResolver typeResolver) {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.caponong.transactionreconciliator.controller"))
                 .paths(PathSelectors.any())
                 .build()
+                .protocols(Sets.newHashSet("http", "https"))
+                .additionalModels(typeResolver.resolve(Response.class),
+                        typeResolver.resolve(Transaction.class),
+                        typeResolver.resolve(MatchTransactionsCountResponse.class),
+                        typeResolver.resolve(ReconciliationRequestDetails.class),
+                        typeResolver.resolve(TransactionsUploadResponse.class),
+                        typeResolver.resolve(UnmatchedTransactionsResponse.class),
+                        typeResolver.resolve(CsvFile.class))
                 .apiInfo(apiInfo());
     }
 
